@@ -21,6 +21,15 @@ jobs:
           git checkout main
           git merge upstream/main --no-edit
 
-      - name: 推送更新
+      - name: 生成 latest 固定订阅文件
         run: |
+          # 自动找到最新的节点文件
+          latest_file=$(ls v20* | sort -r | head -n1)
+          # 把最新节点内容复制到 latest 文件
+          cat "$latest_file" > latest
+          # 提交到仓库
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add latest
+          git commit -m "自动更新 latest 订阅文件" || echo "无变更，跳过提交"
           git push origin main
