@@ -3,31 +3,28 @@ name: Sync Upstream v2rayfree
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 18 * * *'  # UTC 18:00 = 北京时间 02:00
+    - cron: '0 18 * * *'
 
 jobs:
   sync:
     runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
-      - name: Sync upstream to fork
+      - name: Checkout
         uses: actions/checkout@v4
         with:
           persist-credentials: false
+          fetch-depth: 0
 
-      - name: Set up Git
+      - name: Configure Git
         run: |
           git config --global user.name "li1410899382-commits"
           git config --global user.email "li1410899382@gmail.com"
 
-      - name: Add upstream remote
-        run: git remote add upstream https://github.com/free-nodes/v2rayfree.git
-
-      - name: Fetch upstream
-        run: git fetch upstream
-
-      - name: Merge upstream
-        run: git merge upstream/main --allow-unrelated-histories
-
-      - name: Push to origin
+      - name: Sync upstream
         run: |
+          git remote add upstream https://github.com/free-nodes/v2rayfree.git
+          git fetch upstream
+          git merge upstream/main --allow-unrelated-histories --no-edit
           git push https://${{ secrets.ACCESS_TOKEN }}@github.com/li1410899382-commits/v2rayfree.git main
