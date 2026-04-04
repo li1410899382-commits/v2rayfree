@@ -1,6 +1,5 @@
 name: Sync Upstream v2rayfree
 
-# 触发条件：手动触发 + 每天北京时间凌晨2点自动同步
 on:
   workflow_dispatch:
   schedule:
@@ -10,17 +9,12 @@ jobs:
   sync:
     runs-on: ubuntu-latest
     steps:
-      - name: Sync upstream repository
+      - name: Sync upstream to fork
         uses: wearerequired/git-mirror-action@v1.3.0
         env:
-          # 这里用你仓库里的 ACCESS_TOKEN 机密
           SSH_PRIVATE_KEY: ${{ secrets.ACCESS_TOKEN }}
-          # 👇 必须改成你自己的GitHub用户名（li1410899382-commits）
           GIT_USER_NAME: 'li1410899382-commits'
-          # 👇 必须改成你GitHub注册的真实邮箱
-          GIT_USER_EMAIL: 'li1410899382@gmail.com'
+          GIT_USER_EMAIL: 'li1410899382@gmailcom'
         with:
-          # 上游源仓库（免费节点仓库，不要改）
           source-repo: 'https://github.com/free-nodes/v2rayfree.git'
-          # 你自己的fork仓库（不要改地址）
           destination-repo: 'https://github.com/li1410899382-commits/v2rayfree.git'
